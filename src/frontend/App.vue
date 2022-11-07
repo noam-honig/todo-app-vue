@@ -42,7 +42,6 @@ async function setAllCompleted(completed: boolean) {
       <input
         v-model="newTaskTitle"
         placeholder="What needs to be done?"
-        v-on:blur="addTask"
         @keydown.enter="addTask"
       />
       <div v-for="task in tasks">
