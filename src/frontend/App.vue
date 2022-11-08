@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import type { Task } from "./Task";
+import { remult } from "remult";
+import { onMounted, onUnmounted, ref } from "vue";
+import { Task } from "../shared/Task";
 
-const tasks = ref<Task[]>([
-  { id: 1, title: "Setup", completed: true },
-  { id: 2, title: "Entities", completed: false },
-  { id: 3, title: "Paging, Sorting and Filtering", completed: false },
-  { id: 4, title: "CRUD Operations", completed: false },
-  { id: 5, title: "Validation", completed: false },
-  { id: 6, title: "Backend methods", completed: false },
-  { id: 7, title: "Database", completed: false },
-  { id: 8, title: "Authentication and Authorization", completed: false },
-  { id: 9, title: "Deployment", completed: false },
-]);
+const tasks = ref<Task[]>([]);
+
+const taskRepo = remult.repo(Task);
+
+onMounted(async () => 
+  onUnmounted( taskRepo.query({
+  }).subscribe(reduce => {
+    console.log("reduce", { tasks: tasks.value.length })
+    tasks.value = reduce(tasks.value);
+
+  })
+  
+))
+
+//onUnmounted(() => unMount());
+
+
+
+
 
 const newTaskTitle = ref("");
 
@@ -20,33 +29,40 @@ async function addTask() {
   if (newTaskTitle.value) {
     tasks.value = [
       ...tasks.value,
-      {
+      await taskRepo.insert({
         title: newTaskTitle.value,
         completed: false,
         id: tasks.value.length + 1,
-      },
+      })
     ];
   }
 }
 async function deleteTask(task: Task) {
+  await taskRepo.delete(task);
   tasks.value = tasks.value.filter((t) => t != task);
 }
 async function setAllCompleted(completed: boolean) {
-  tasks.value = tasks.value.map((t) => ({ ...t, completed }));
+  for (const task of tasks.value) {
+    await taskRepo.save({ ...task, completed });
+  }
+  tasks.value = await taskRepo.find();
+}
+async function save(task: Task) {
+  try {
+    await taskRepo.save(task);
+  } catch (error: any) {
+    alert(error.message);
+  }
 }
 </script>
 
 <template>
   <div>
     <main>
-      <input
-        v-model="newTaskTitle"
-        placeholder="What needs to be done?"
-        @keydown.enter="addTask"
-      />
+      <input v-model="newTaskTitle" placeholder="What needs to be done?" @keydown.enter="addTask" />
       <div v-for="task in tasks">
-        <input type="checkbox" v-model="task.completed" />
-        <input v-model="task.title" />
+        <input type="checkbox" v-model="task.completed" @change="save(task)" />
+        <input v-model="task.title" @blur="save(task)" />
         <button @click="deleteTask(task)">x</button>
       </div>
     </main>
