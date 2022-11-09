@@ -26,6 +26,7 @@ async function addTask() {
         id: tasks.value.length + 1
       }
     ]
+    newTaskTitle.value = '';
   }
 }
 async function deleteTask(task: Task) {
