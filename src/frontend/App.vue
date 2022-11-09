@@ -10,18 +10,10 @@ const taskRepo = remult.repo(Task);
 onMounted(async () => 
   onUnmounted( taskRepo.query({
   }).subscribe(reduce => {
-    console.log("reduce", { tasks: tasks.value.length })
     tasks.value = reduce(tasks.value);
-
   })
   
 ))
-
-//onUnmounted(() => unMount());
-
-
-
-
 
 const newTaskTitle = ref("");
 
