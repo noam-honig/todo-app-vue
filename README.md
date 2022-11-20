@@ -1,40 +1,37 @@
 # todo-app-vue
-
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
-
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
+## Deploy to Heroku
 ```sh
-npm install
+heroku create
+heroku config:set SESSION_SECRET=random-secret
+heroku addons:create heroku-postgresql:hobby-dev
+git add .
+git commit -m "todo app deploy"
+git push heroku master
+heroku apps:open
 ```
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
+## Installed components:
+1. Basic Setup: `express` and `remult`
+   ```sh
+   npm i express remult
+   npm i --save-dev @types/express vite3-plugin-express
+   ```
+   See [Basic Setup](https://remult.dev/tutorials/vue/#option-2-step-by-step-setup)
+2. Authentication: `cookie-session`
+   ```sh
+   npm i cookie-session
+   npm i --save-dev @types/cookie-session
+   ```
+   See [Authentication](https://remult.dev/tutorials/vue/auth.html#user-authentication)
+3. Postgres:
+   ```sh
+   npm i pg
+   npm i --save-dev @types/pg
+   ```
+   See [Connect to Postgres](https://remult.dev/tutorials/vue/deployment.html#connect-to-postgres)
+4. For Heroku Deployment:
+   ```sh
+   npm i compression helmet heroku-ssl-redirect
+   npm i @types/compression --save-dev
+   ```
+   See [Prepare for Production](https://remult.dev/tutorials/vue/deployment.html#prepare-for-production)
